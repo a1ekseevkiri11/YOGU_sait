@@ -1,6 +1,9 @@
-from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import user_passes_test
+from django.urls import reverse_lazy
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
 from django.views.generic import (
     ListView,
     DetailView,
@@ -9,29 +12,81 @@ from django.views.generic import (
     DeleteView
 )
 from .models import Project
-from .forms import ProjectForm
-
-def home(request):
-    projects = Project.objects.all()
-    urlCreateProject = user_belongs_to_allowed_groups(request.user)
-    context = {'projects': projects, 'urlCreateProject': urlCreateProject}
-    return render(request, 'showcase_projects/home.html', context)
 
 
-#переписать с нормальными переменными
-def user_belongs_to_allowed_groups(user):
-    allowed_groups = ['customer', 'admin'] 
-    return user.groups.filter(name__in=allowed_groups).exists()
+def group_required(group_name):
+    return user_passes_test(lambda user: user.groups.filter(name=group_name).exists())
 
 
-@user_passes_test(user_belongs_to_allowed_groups)
-def createProject(request):
-    if request.method == 'POST':
-        form = ProjectForm(request.POST)
-        form.instance.customer = request.user
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-    form = ProjectForm()
+class ProjectListView(ListView):
+    model = Project
+    template_name = 'showcase_projects/home.html' 
+    context_object_name = 'projects'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['showButtonCreateProject'] = isCustomer(self.request.user)
+        return context
+    
 
-    return render(request, 'showcase_projects/project.html', {'form': form})
+class ProjectDetailView(DetailView):
+    model = Project
+
+
+class ProjectUserListView(ListView):
+    model =  Project
+    template_name = 'showcase_projects/project_user.html'
+    context_object_name = 'projects'
+
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.kwargs.get('username'))
+        return Project.objects.filter(customer=user)
+
+
+class ProjectCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = Project
+    fields =  ['title', 'place']
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        form.instance.customer = self.request.user
+        return super().form_valid(form)
+    
+    def test_func(self):
+        if isCustomer(self.request.user):
+            return True
+        return False
+
+
+
+class ProjectUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Project
+    fields = ['title', 'place']
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        form.instance.customer = self.request.user
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.customer:
+            return True
+        return False
+    
+
+class ProjectDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Project
+    success_url = reverse_lazy('home')
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.customer:
+            return True
+        return False
+
+
+
+def isCustomer(user):
+    groups = ['customer'] 
+    return user.groups.filter(name__in=groups).exists()

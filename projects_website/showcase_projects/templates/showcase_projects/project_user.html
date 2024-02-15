@@ -1,8 +1,9 @@
 {% extends "showcase_projects/base.html" %}
 
-{% block title %}Витрина проектов{% endblock %}
+{% block title %}Проекты заказчика {{ view.kwargs.username }} {% endblock %}
 
 {% block content %}
+<h1 class="mb-3">Проекты заказчика: {{ view.kwargs.username }}</h1>
 <div style="min-height: 85vh; display: flex; justify-content: center; align-items: center;">
     <div class="container mt-5">
         <div class="row mt-3">

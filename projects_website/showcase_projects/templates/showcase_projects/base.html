@@ -14,7 +14,7 @@
     <header>
         <div class="d-flex flex-column flex-md-row align-items-center pb-3 border-bottom">
             <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-                <img src="{% static " showcase_projects/img/github.svg" %}" id="logo">
+                <img src="{% static "showcase_projects/img/github.svg" %}" id="logo">
                 <span class="fs-4">a1ekseevkiri11</span>
             </a>
             <ul class="nav nav-pills">
@@ -36,10 +36,11 @@
             </div>
         </div>
     </header>
-    <main>
+    <main role="main" class="container">
         {% block content %}{% endblock %}
     </main>
     <footer>
+        <hr>
         <ul>
             <li>Проще позвонить чем у кого то занимать!</li>
             <li>8-800-535-35-35</li>
