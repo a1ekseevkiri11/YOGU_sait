@@ -1,0 +1,31 @@
+{% extends "showcase_projects/base.html" %}
+
+{% block title %}Витрина проектов{% endblock %}
+
+{% block content %}
+<div style="min-height: 85vh; display: flex; justify-content: center; align-items: center;">
+    <div class="container mt-5">
+        <div class="row mt-3">
+            {% if projects %}
+                {% for project in projects %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.title }}</h5>
+                            <p class="card-text">Кол-во мест: {{ project.place }}</p>
+                            <p class="card-text">Заказчик: {{ project.customer.username }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <h2>Проектов нет!</h2>
+            {% endif %}
+            {% if urlCreateProject %}
+                <a href="{% url 'project' %}" class="btn btn-primary mt-3">Добавить заявку на проект</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
