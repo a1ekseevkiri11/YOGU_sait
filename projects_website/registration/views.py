@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+from showcase_projects.models import Participation
 from .forms import UserRegisterForm
 
 
@@ -20,4 +20,11 @@ from .forms import UserRegisterForm
 
 @login_required
 def profile(request):
-    return render(request, 'registration/profile.html')
+    try:
+        participation = Participation.objects.get(student=request.user)
+        project = participation.project
+    except Participation.DoesNotExist:
+        project = None
+
+    context = {'project': project}
+    return render(request, 'registration/profile.html', context)

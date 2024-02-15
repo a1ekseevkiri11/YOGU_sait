@@ -10,3 +10,8 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
+    
+
+class Participation(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE)

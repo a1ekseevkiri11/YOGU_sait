@@ -1,7 +1,6 @@
-from django.contrib.auth.decorators import user_passes_test
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import (
@@ -11,12 +10,8 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
-from .models import Project
-
-
-def group_required(group_name):
-    return user_passes_test(lambda user: user.groups.filter(name=group_name).exists())
-
+from .models import Project, Participation
+from .forms import ConfirmationForm
 
 class ProjectListView(ListView):
     model = Project
@@ -29,9 +24,50 @@ class ProjectListView(ListView):
         return context
     
 
-class ProjectDetailView(DetailView):
+class ProjectDetailView(DetailView, UserPassesTestMixin):
     model = Project
+    template_name = 'showcase_projects/project_detail.html'
+    
+    
+    def test_func(self):
+        return isStudent(self.request.user)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['showButtonParticipationProject'] = isStudent(self.request.user) and freePlacesInProject(self.get_object())
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        project = self.get_object()
+        
+        if not isStudent(self.request.user):
+            return redirect('home')
 
+        form = ConfirmationForm(request.POST)
+        
+        if form.is_valid():
+            addStudentInProject(self.request.user, project)
+            form.cleaned_data['confirmation']
+            return redirect('project-detail', pk=project.pk)
+
+        return render(request, self.template_name, {'project': project, 'form': form})
+
+
+def freePlacesInProject(project):
+    if project.place > Participation.objects.filter(project=project).count():
+        return True
+    return False
+
+
+def addStudentInProject(user, project):
+    if Participation.objects.filter(student=user):
+        return
+    
+    if not freePlacesInProject(project):
+        return
+    
+    Participation.objects.create(project=project, student=user)
+    
 
 class ProjectUserListView(ListView):
     model =  Project
@@ -86,7 +122,11 @@ class ProjectDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return False
 
 
-
 def isCustomer(user):
-    groups = ['customer'] 
-    return user.groups.filter(name__in=groups).exists()
+    return user.groups.filter(name='customer').exists()
+
+def isLecturer(user):
+    return user.groups.filter(name='lecturer').exists()
+
+def isStudent(user):
+    return user.groups.filter(name='student').exists()
