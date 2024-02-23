@@ -12,8 +12,7 @@
                     <h5 class="card-title">{{ project.title }}</h5>
                     <p class="card-text">Количество мест: {{ project.place }}</p>
                     <p class="card-text">Заказчик:
-                        <a href="{% url 'project-user' project.customer.username %}"
-                            class="card-text">{{project.customer.username }}</a>
+                        <a href="{% url 'project-user' project.customer.user.username %}" class="card-text">{{ project.customer.user.username }}</a>
                     </p>
                 </div>
             </div>
