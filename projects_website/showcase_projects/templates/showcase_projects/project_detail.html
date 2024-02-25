@@ -13,49 +13,50 @@
             </p>
         </div>
     </div>
+    
     {% if user.is_authenticated %}
-    {% if studentInThisProject %}
-    <h3>
-        Вы уже учавствуете в этом проекте
-    </h3>
-    {% elif studentInProject  %}
-    <h3>
-        Вы учавствуете в другом проекте
-    </h3>
-    {% elif participationProject %}
-        
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmationModal">
-            Присоединиться к проекту
-        </button>
+        {% if studentInThisProject %}
+        <h3>
+            Вы уже учавствуете в этом проекте
+        </h3>
+        {% elif studentInProject  %}
+        <h3>
+            Вы учавствуете в другом проекте
+        </h3>
+        {% elif participationProject %}
+            
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmationModal">
+                Присоединиться к проекту
+            </button>
 
-        <!-- Всплывающее окно -->
-        <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Подтверждение</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Вы уверены, что хотите присоединиться к проекту?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Нет</button>
-                        <form method="post" action="{% url 'project-detail' pk=project.pk %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="confirmation" value="true">
-                            <button type="submit" class="btn btn-primary">Да</button>
-                        </form>
+            <!-- Всплывающее окно -->
+            <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Подтверждение</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Вы уверены, что хотите присоединиться к проекту?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Нет</button>
+                            <form method="post" action="{% url 'project-detail' pk=project.pk %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="confirmation" value="true">
+                                <button type="submit" class="btn btn-primary">Да</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    {% endif %}
+        {% endif %}
     {% endif %}
     
-    {% if object.customer == user %}
+    {% if object.customer == user.customer %}
     <div>
         <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'project-update' object.id %}">Редактировать</a>
         <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'project-delete' object.id %}">Удалить</a>

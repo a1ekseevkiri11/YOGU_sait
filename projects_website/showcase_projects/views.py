@@ -4,16 +4,19 @@ from django.shortcuts import (
     redirect, 
     get_object_or_404
 )
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+
 from django.contrib.auth.mixins import (
     LoginRequiredMixin, 
     UserPassesTestMixin
 )
 
-from django.contrib.auth.models import (
-    User
+
+from registration.models import(
+    Student,
+    Customer,
+    Lecturer,
 )
+
 
 from django.views.generic import (
     ListView,
@@ -26,9 +29,6 @@ from django.views.generic import (
 from .models import (
     Project, 
     Participation,
-    Student,
-    Customer,
-    Lecturer
 )
 
 from .forms import ConfirmationForm
@@ -51,7 +51,7 @@ class ProjectListView(ListView):
 class ProjectDetailView(DetailView):
     model = Project
     template_name = 'showcase_projects/project_detail.html'
-    
+
     def get_context_data(self, **kwargs):
         project = self.get_object()
         context = super().get_context_data(**kwargs)
@@ -61,7 +61,7 @@ class ProjectDetailView(DetailView):
         if not hasattr(self.request.user, 'student'):
             return context
         
-        context['participationProject'] = hasattr(self.request.user, 'student') and project.freePlaces()
+        context['participationProject'] = project.freePlaces()
         context['studentInProject'] = Participation.objects.filter(student=self.request.user.student).exists()
         context['studentInThisProject'] = project.studentInThisProject(self.request.user.student)
         return context
@@ -110,12 +110,12 @@ class ProjectUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
-        form.instance.customer = self.request.user
+        form.instance.customer = self.request.user.customer
         return super().form_valid(form)
 
     def test_func(self):
         post = self.get_object()
-        return self.request.user == post.customer
+        return self.request.user.customer == post.customer
     
     
 
@@ -126,6 +126,4 @@ class ProjectDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         post = self.get_object()
-        return self.request.user == post.customer
-    
-
+        return self.request.user.customer == post.customer
