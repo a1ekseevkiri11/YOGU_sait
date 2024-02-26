@@ -32,14 +32,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'registration.apps.RegistrationConfig',
-    'showcase_projects.apps.ShowcaseProjectsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'registration.apps.RegistrationConfig',
+    'showcase_projects.apps.ShowcaseProjectsConfig',
 ]
 
 MIDDLEWARE = [

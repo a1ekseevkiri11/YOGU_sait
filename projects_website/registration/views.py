@@ -3,8 +3,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from showcase_projects.models import (
     Participation,
-    Student
+    Profile,
 )
+from .models import Profile
 from .forms import UserRegisterForm
 from django.shortcuts import get_object_or_404
 
@@ -25,7 +26,7 @@ from django.shortcuts import get_object_or_404
 @login_required
 def profile(request):
     try:
-        student = Student.objects.get(user=request.user)
+        student = Profile.objects.get(user=request.user)
         participation = Participation.objects.get(student=student)
         project = participation.project
     except:
