@@ -45,6 +45,9 @@ class ProjectListView(ListView):
     model = Project
     template_name = 'showcase_projects/home.html' 
     context_object_name = 'projects'
+
+    def get_queryset(self):
+        return Project.objects.filter(status='accepted')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -53,7 +56,7 @@ class ProjectListView(ListView):
     
 
 
-class ProjectDetailView(DetailView):
+class ProjectDetailView(DetailView, UserPassesTestMixin):
     model = Project
     template_name = 'showcase_projects/project_detail.html'
 
@@ -74,7 +77,6 @@ class ProjectDetailView(DetailView):
         context['motivation_form'] =  MotivationLettersForm()
         return context
     
-    
     def post(self, request, *args, **kwargs):
         if canAddParticipation(self.request.user):
             project = self.get_object()
@@ -89,10 +91,11 @@ class ProjectDetailView(DetailView):
                 project.addStudent(student)
                 confirmation_form.cleaned_data['confirmation']
                 
-            
-        
         return redirect('project-detail', pk=project.pk)
-
+    
+    def test_func(self):
+        project = self.get_object()
+        return project.status == 'accepted'
 
 
 class ProjectCustomerListView(ListView):
@@ -143,3 +146,18 @@ class ProjectDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user.profile == post.profile
+
+
+
+class AdministratorAcceptanceProjects(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = Project
+    template_name = 'showcase_projects/administrator/acceptanceProjects.html'
+    context_object_name = 'projects'
+
+    def get_queryset(self):
+        return Project.objects.filter(status='processing')
+
+    def test_func(self):
+        return self.request.user.groups.filter(name='administrator').exists()
+
+# Сделать кнопки принять отклонить!!!

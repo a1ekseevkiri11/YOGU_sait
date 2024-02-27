@@ -8,6 +8,7 @@ from .views import (
     ProjectUpdateView,
     ProjectDeleteView,
     ProjectCustomerListView,
+    AdministratorAcceptanceProjects,
 )
 
 urlpatterns = [
@@ -17,4 +18,5 @@ urlpatterns = [
     path('project/<int:pk>/', ProjectDetailView.as_view(), name='project-detail'),
     path('post/<int:pk>/update/', ProjectUpdateView.as_view(), name='project-update'),
     path('post/<int:pk>/delete/', ProjectDeleteView.as_view(), name='project-delete'),
+    path('administrator/', AdministratorAcceptanceProjects.as_view(), name='administrator')
 ]

@@ -1,13 +1,12 @@
-from django.shortcuts import render, redirect
-from django.contrib import messages
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from showcase_projects.models import (
     Participation,
     Profile,
 )
 from .models import Profile
-from .forms import UserRegisterForm
-from django.shortcuts import get_object_or_404
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
 
 
 # def register(request):
@@ -33,3 +32,11 @@ def profile(request):
         project = None
     context = {'project': project}
     return render(request, 'registration/profile.html', context)
+
+
+class CustomLoginView(LoginView):
+    def get_success_url(self):
+        if self.request.user.groups.filter(name='administrator').exists():
+            return reverse_lazy('administrator')
+        else:
+            return super().get_success_url()
