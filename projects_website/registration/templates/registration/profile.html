@@ -1,22 +1,8 @@
 {% extends "showcase_projects/base.html" %}
 {% block content %}
-    <div class="content-section">
-        <div class="media">
-            <div class="media-body">
-                <h2 class="account-heading">{{ user.username }}</h2>
-            </div>
-            {% if project %}
-            <h3>Вы учавствуете в проекте:</h3>
-            <div class="media-body">
-                <div class="article-metadata">
-                    <h5 class="card-title">{{ project.title }}</h5>
-                    <p class="card-text">Количество мест: {{ project.place }}</p>
-                    <p class="card-text">Заказчик:
-                        <a href="{% url 'project-user' project.customer.user.username %}" class="card-text">{{ project.customer.user.username }}</a>
-                    </p>
-                </div>
-            </div>
-            {% endif %}
-        </div>
-    </div>
+<h2 class="account-heading">{{ user.username }}</h2>
+{% if project %}
+    <h3>Вы учавствуете в проекте:</h3>
+    {% include "showcase_projects/project_card.html" %}
+{% endif %}
 {% endblock content %}

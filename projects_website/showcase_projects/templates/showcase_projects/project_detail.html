@@ -64,10 +64,14 @@
 
     {% endif %}
     
-    {% if object.customer == user.customer %}
+    {% if project.customer == user.profile %}
+    <h3>{{ project.get_status_display }}</h3>
+    {% if project.rejection_comment %}
+            <p>Комментарий: {{ project.rejection_comment.comment }}</p>
+    {% endif %}
     <div>
-        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'project-update' object.id %}">Редактировать</a>
-        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'project-delete' object.id %}">Удалить</a>
+        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'project-update' project.id %}">Редактировать</a>
+        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'project-delete' project.id %}">Удалить</a>
     </div>
     {% endif %}
 </article>

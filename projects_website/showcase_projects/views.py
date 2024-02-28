@@ -1,11 +1,9 @@
-from django.urls import reverse_lazy
 from django.shortcuts import (
     redirect, 
     get_object_or_404
 )
 
 from django.contrib.auth.mixins import (
-    LoginRequiredMixin, 
     UserPassesTestMixin
 )
 
@@ -18,15 +16,11 @@ from registration.models import(
 from django.views.generic import (
     ListView,
     DetailView,
-    CreateView,
-    UpdateView,
-    DeleteView
 )
 
 from .models import (
     Project, 
     Participation,
-    MotivationLetters,
 )
 
 from .pernission import (
@@ -95,7 +89,8 @@ class ProjectDetailView(DetailView, UserPassesTestMixin):
     
     def test_func(self):
         project = self.get_object()
-        return project.status == 'accepted'
+        status = project.get_status('accepted')
+        return status == 'accepted'
 
 
 class ProjectCustomerListView(ListView):
@@ -106,58 +101,3 @@ class ProjectCustomerListView(ListView):
     def get_queryset(self):
         user = get_object_or_404(Profile, user__username=self.kwargs.get('username'))
         return Project.objects.filter(customer=user)
-
-
-
-class ProjectCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    model = Project
-    fields =  ['title', 'place']
-    success_url = reverse_lazy('home')
-
-    def form_valid(self, form):
-        form.instance.customer = self.request.user.profile
-        return super().form_valid(form)
-    
-    def test_func(self):
-        return canAddProject(self.request.user)
-
-
-
-class ProjectUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Project
-    fields = ['title', 'place']
-    success_url = reverse_lazy('home')
-
-    def form_valid(self, form):
-        form.instance.customer = self.request.user.profile
-        return super().form_valid(form)
-
-    def test_func(self):
-        post = self.get_object()
-        return self.request.user.profile == post.profile
-    
-    
-
-
-class ProjectDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Project
-    success_url = reverse_lazy('home')
-
-    def test_func(self):
-        post = self.get_object()
-        return self.request.user.profile == post.profile
-
-
-
-class AdministratorAcceptanceProjects(LoginRequiredMixin, UserPassesTestMixin, ListView):
-    model = Project
-    template_name = 'showcase_projects/administrator/acceptanceProjects.html'
-    context_object_name = 'projects'
-
-    def get_queryset(self):
-        return Project.objects.filter(status='processing')
-
-    def test_func(self):
-        return self.request.user.groups.filter(name='administrator').exists()
-
-# Сделать кнопки принять отклонить!!!
