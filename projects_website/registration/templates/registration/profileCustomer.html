@@ -10,9 +10,9 @@
     {% for project in projects %}
         {% if project.status == 'rejected' %}
             {% include "showcase_projects/project_card.html" %}
-        {% endif %}
-        {% if project.rejection_comment %}
-            <p>Комментарий: {{ project.rejection_comment.comment }}</p>
+            {% if project.rejection_comment %}
+                <p>Комментарий: {{ project.rejection_comment.comment }}</p>
+            {% endif %}
         {% endif %}
     {% endfor %}
     <hr>

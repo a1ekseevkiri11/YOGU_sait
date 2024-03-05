@@ -56,12 +56,12 @@ class ProjectDetailView(DetailView, UserPassesTestMixin):
 
     def get_context_data(self, **kwargs):
         project = self.get_object()
-        student =  self.request.user.profile
         context = super().get_context_data(**kwargs)
 
         if not self.request.user.is_authenticated:
             return context
         
+        student =  self.request.user.profile
         if not canAddParticipation(self.request.user):
             return context
         

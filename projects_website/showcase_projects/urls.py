@@ -6,6 +6,10 @@ from .views import (
     ProjectCustomerListView,
 )
 
+from .script import (
+    DownloadLetter
+)
+
 from .viewsAdministrator import (
     AdministratorProjectsAcceptanceView,
 )
@@ -20,6 +24,7 @@ urlpatterns = [
 	path('', ProjectListView.as_view(), name='home'),
     path('user/<str:username>', ProjectCustomerListView.as_view(), name='project-user'),
     path('project/<int:pk>/', ProjectDetailView.as_view(), name='project-detail'),
+    path('downloadLetter/<int:letter_id>/', DownloadLetter.as_view(), name='downloadLetter'),
     #customer
     path('project/new/', ProjectCreateView.as_view(), name='project-create'),
     path('post/<int:pk>/update/', ProjectUpdateView.as_view(), name='project-update'),

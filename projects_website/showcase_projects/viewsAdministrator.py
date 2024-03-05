@@ -21,7 +21,7 @@ from .formsAdministrator import (
 )
 
 
-class AdministratorProjectsAcceptanceView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+class AdministratorProjectsAcceptanceView(ListView, LoginRequiredMixin, UserPassesTestMixin):
     model = Project
     template_name = 'showcase_projects/administrator/acceptanceProjects.html'
     context_object_name = 'projects'
