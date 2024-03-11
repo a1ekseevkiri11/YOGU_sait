@@ -65,13 +65,6 @@ class Project(ModelWithStatus):
         
         MotivationLetters.objects.create(project=self, student=student, letter=letter)
 
-    def deleteLetter(self, student):
-        try:
-            letter = MotivationLetters.objects.get(project=self, student=student)
-            letter.delete()
-        except MotivationLetters.DoesNotExist:
-            pass
-
     def addRejectionComment(self, comment):
         if comment != '':
             RejectionComment.objects.create(project=self, comment=comment)

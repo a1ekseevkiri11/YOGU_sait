@@ -17,7 +17,6 @@ from django.shortcuts import (
     redirect,
     get_object_or_404,
 )
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Profile
@@ -57,7 +56,7 @@ def profile(request):
         return redirect(reverse('profileLecturer'))
     if groups.filter(name='student').exists():
         return redirect(reverse('profileStudent'))
-    return redirect(reverse('home'))
+    return render(template_name='registration/profile.html', request=request)
 
 
 class CustomerProfile(ListView, UserPassesTestMixin):

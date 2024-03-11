@@ -69,7 +69,7 @@ class ProjectDetailView(DetailView, UserPassesTestMixin):
     def get_context_data(self, **kwargs):
         project = self.get_object()
         context = super().get_context_data(**kwargs)
-
+        context['countFreePlace'] =  project.place - project.participation_set.count()
         if not self.request.user.is_authenticated:
             return context
         
@@ -81,6 +81,7 @@ class ProjectDetailView(DetailView, UserPassesTestMixin):
         context['studentInProject'] = Participation.objects.filter(student=student).exists()
         context['studentInThisProject'] = project.studentInThisProject(student)
         context['motivation_form'] =  MotivationLettersForm()
+       
         return context
     
     def post(self, request, *args, **kwargs):

@@ -6,11 +6,18 @@
 <article class="media content-section">
     <div class="media-body">
         <div class="article-metadata">
-            <h5 class="card-title">{{ project.title }}</h5>
-            <p class="card-text">Количество мест: {{ project.place }}</p>
+            <h5 class="card-title">  {{ project.title }}</h5>
+            <p class="card-text">Количество свободных мест: {{ countFreePlace }}/{{ project.place }}</p>
             <p class="card-text">Заказчик:
                 <a href="{% url 'project-user' project.customer.user.username %}" class="card-text">{{ project.customer.user.username }}</a>
             </p>
+            {% if project.participation_set.all|length > 0 %}
+                <p>Участники проекта</p>
+                {% for participation in project.participation_set.all %}
+                    <li>{{ participation.student }}</li>
+                {% endfor %}
+            {% endif %}
+            <br>
         </div>
     </div>
     
