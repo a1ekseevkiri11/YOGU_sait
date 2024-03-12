@@ -1,0 +1,7 @@
+attrs==23.1.0
+celery[redis]==5.2.7
+Django==5.0
+django-celery-beat==2.6.0
+django-crispy-forms==2.1
+django-solo==2.2.0
+django-timezone-field==6.1.0

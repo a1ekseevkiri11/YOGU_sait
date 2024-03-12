@@ -1,5 +1,7 @@
 from django.db import models
 from registration.models import Profile
+from django.contrib.auth.models import Permission
+from django.utils import timezone
 
 class ModelWithStatus(models.Model):
 
@@ -102,3 +104,13 @@ class MotivationLetters(ModelWithStatus):
 class RejectionComment(models.Model):
     project = models.OneToOneField(Project, on_delete=models.CASCADE, related_name='rejection_comment')
     comment = models.TextField()
+
+
+class TimePermission(models.Model):
+    permission = models.OneToOneField(Permission, on_delete=models.CASCADE)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+
+    def is_active(self):
+        now = timezone.now()
+        return self.start_time <= now <= self.end_time
