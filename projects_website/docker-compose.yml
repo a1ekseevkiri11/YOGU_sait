@@ -4,13 +4,47 @@ services:
   redis:
     image: redis
     restart: always
+    hostname: redis
     
      
   web:
-    build: .
+    build: 
+      context: .
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
+  
+  worker:
+    build:
+      context: .
+    hostname: worker
+    entrypoint: celery
+    command: -A projects_website.celery_app worker --loglevel=info
+    volumes:
+      - C:\Users\79828\Desktop\YOGU_sait\projects_website\db.sqlite3:/app/db.sqlite3
+      - ./services:/services
+    environment:
+      - DJANGO_SETTINGS_MODULE=projects_website.settings
+    links:
+      - redis
+    depends_on:
+      - redis
+  
+  flower:
+    build:
+      context: .
+    hostname: flower
+    entrypoint: celery
+    command: -A projects_website.celery_app flower
+    volumes:
+      - ./services:/services
+    links:
+      - redis
+    depends_on:
+      - redis
+    ports:
+      - "5555:5555"
+
 
 
 

@@ -1,19 +1,17 @@
 # tasks.py
 
 from celery import shared_task
-from django.utils import timezone
-from .models import TimePermission
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 
-@shared_task
-def check_permissions():
-    now = timezone.now()
-    timePermissions = TimePermission.objects.filter(start_time__lte=now, end_time__gte=now)
-    
-    for timePermission in timePermissions:
-        if timePermission.is_active():
-            group = Group.objects.get(name='student')
-            group.permissions.add(timePermission.permission)
-        else:
-            group = Group.objects.get(name='student')
-            group.permissions.remove(timePermission.permission)
+@shared_task(bind=True)
+def addPermissionToGroup(self, permission_id, group_name):
+    permission = Permission.objects.get(codename='add_project', content_type__app_label='showcase_projects')
+    group = Group.objects.get(name='student')
+    group.permissions.add(permission)
+    group.save()
+
+
+
+#   Короче, надо попробывать вынести базу данных в docker контейнер
+#   потому что worker видит, но не может заносить в нее данные
+#   лучше вообще перейти на MySQL!!!

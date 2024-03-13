@@ -3,6 +3,8 @@ from registration.models import Profile
 from django.contrib.auth.models import Permission
 from django.utils import timezone
 
+from .tasks import addPermissionToGroup
+
 class ModelWithStatus(models.Model):
 
     class Meta:
@@ -110,6 +112,10 @@ class TimePermission(models.Model):
     permission = models.OneToOneField(Permission, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        addPermissionToGroup.delay(self.permission.pk, "student")
+        return super().save(*args, **kwargs)
 
     def is_active(self):
         now = timezone.now()

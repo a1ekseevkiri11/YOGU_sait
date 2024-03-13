@@ -74,14 +74,14 @@ class ProjectDetailView(DetailView, UserPassesTestMixin):
             return context
         
         student =  self.request.user.profile
-        if not canAddParticipation(self.request.user):
-            return context
+        if canAddParticipation(self.request.user):
+            context['participationProject'] = project.freePlaces()
+            context['studentInProject'] = Participation.objects.filter(student=student).exists()
+            context['studentInThisProject'] = project.studentInThisProject(student)
         
-        context['participationProject'] = project.freePlaces()
-        context['studentInProject'] = Participation.objects.filter(student=student).exists()
-        context['studentInThisProject'] = project.studentInThisProject(student)
-        context['motivation_form'] =  MotivationLettersForm()
-       
+        if canAddMotivationLetters(self.request.user):
+            context['motivation_form'] =  MotivationLettersForm()
+            
         return context
     
     def post(self, request, *args, **kwargs):

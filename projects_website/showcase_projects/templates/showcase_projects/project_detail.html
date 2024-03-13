@@ -33,17 +33,19 @@
             Вы учавствуете в другом проекте
         </h3>
         {% elif participationProject %}
+
+            {% if motivation_form %}
+                <form method="post" action="{% url 'project-detail' pk=project.pk %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="add_motivation_letter" value="true">
+                    {{ motivation_form }}
+                    <button type="submit">Отправить</button>
+                </form>
+            {% endif %}
             
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmationModal">
                 Присоединиться к проекту
             </button>
-
-            <form method="post" action="{% url 'project-detail' pk=project.pk %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                <input type="hidden" name="add_motivation_letter" value="true">
-                {{ motivation_form }}
-                <button type="submit">Отправить</button>
-            </form>
 
         {% endif %}
         <!-- Всплывающее окно -->

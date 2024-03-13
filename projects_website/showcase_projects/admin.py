@@ -7,6 +7,7 @@ from .models import (
     TimePermission,
 )
 
+
 admin.site.register(Project)
 admin.site.register(Participation)
 admin.site.register(MotivationLetters)
