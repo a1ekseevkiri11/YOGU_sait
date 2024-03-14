@@ -1,6 +1,13 @@
 version: '3'
 
 services:
+  pgadmin:
+    image: thajeztah/pgadmin4
+    ports:
+      - "5050:5050"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
 
   redis:
     image: redis
@@ -15,6 +22,8 @@ services:
       - POSTGRES_PASSWORD=password
     volumes:
       - pgdbdata:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
 
      
   web:

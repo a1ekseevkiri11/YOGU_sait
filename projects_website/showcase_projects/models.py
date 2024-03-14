@@ -3,7 +3,10 @@ from registration.models import Profile
 from django.contrib.auth.models import Permission
 from django.utils import timezone
 
-from .tasks import addPermissionToGroup
+from .tasks import (
+    addPermissionToGroup,
+    removePermissionFromGroup,
+)
 
 class ModelWithStatus(models.Model):
 
@@ -109,14 +112,26 @@ class RejectionComment(models.Model):
 
 
 class TimePermission(models.Model):
-    permission = models.OneToOneField(Permission, on_delete=models.CASCADE)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+
+    class Meta:
+        unique_together = ('permission', 'operation')
+
+
+    OPERATION_CHOICES = (
+        ('add', 'Add'),
+        ('delete', 'Delete'),
+    )
+
+    permission = models.ForeignKey(Permission, on_delete=models.CASCADE)
+    time = models.DateTimeField()
+    operation = models.CharField(max_length=10, choices=OPERATION_CHOICES, blank=True, null=True)
+    task_id = models.CharField(max_length=255, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        addPermissionToGroup.delay(self.permission.pk, "student")
+        if self.operation == 'add':
+            task = addPermissionToGroup.delay(self.permission.pk, "student")
+            self.task_id = task.id
+        elif self.operation == 'delete':
+            task = removePermissionFromGroup.delay(self.permission.pk, "student")
+            self.task_id = task.id
         return super().save(*args, **kwargs)
-
-    def is_active(self):
-        now = timezone.now()
-        return self.start_time <= now <= self.end_time
