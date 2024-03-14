@@ -1,18 +1,36 @@
 version: '3'
 
 services:
+
   redis:
     image: redis
     restart: always
     hostname: redis
-    
+
+  db:
+    image: postgres:14.6-alpine
+    environment:
+      - POSTGRES_DB=pgdb
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - pgdbdata:/var/lib/postgresql/data/
+
      
   web:
     build: 
       context: .
-    command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=pgdb
+      - DB_USER=user
+      - DB_PASSWORD=password
+    command: python manage.py runserver 0.0.0.0:8000
+    
+    depends_on:
+      - db
   
   worker:
     build:
@@ -21,14 +39,18 @@ services:
     entrypoint: celery
     command: -A projects_website.celery_app worker --loglevel=info
     volumes:
-      - C:\Users\79828\Desktop\YOGU_sait\projects_website\db.sqlite3:/app/db.sqlite3
       - ./services:/services
     environment:
-      - DJANGO_SETTINGS_MODULE=projects_website.settings
+      - DB_HOST=db
+      - DB_NAME=pgdb
+      - DB_USER=user
+      - DB_PASSWORD=password
     links:
       - redis
+      - db
     depends_on:
       - redis
+      - db
   
   flower:
     build:
@@ -40,13 +62,16 @@ services:
       - ./services:/services
     links:
       - redis
+      - db
     depends_on:
       - redis
+      - db
     ports:
       - "5555:5555"
+    
 
 
-
-
+volumes:
+  pgdbdata: null
 
 
