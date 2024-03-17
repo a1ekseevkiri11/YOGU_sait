@@ -1,18 +1,15 @@
 version: '3'
 
 services:
-  pgadmin:
-    image: thajeztah/pgadmin4
-    ports:
-      - "5050:5050"
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-      - PGADMIN_DEFAULT_PASSWORD=admin
 
   redis:
     image: redis
     restart: always
     hostname: redis
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
 
   db:
     image: postgres:14.6-alpine
@@ -80,7 +77,21 @@ services:
     
 
 
+
 volumes:
-  pgdbdata: null
+  pgdbdata:
+    driver: local
+    driver_opts:
+      type: none
+      device: C:\Users\79828\Desktop\YOGU_sait\postgresql_data_base
+      o: bind
+
+  redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: C:\Users\79828\Desktop\YOGU_sait\redis_data_base
+      o: bind
+
 
 

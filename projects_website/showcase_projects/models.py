@@ -1,11 +1,11 @@
 from django.db import models
 from registration.models import Profile
-from django.contrib.auth.models import Permission
-from django.utils import timezone
+from django.contrib.auth.models import Group, Permission
+from celery.result import AsyncResult
 
 from .tasks import (
-    addPermissionToGroup,
-    removePermissionFromGroup,
+    addPermissionToGroups,
+    deletePermissionFromGroups,
 )
 
 class ModelWithStatus(models.Model):
@@ -111,27 +111,33 @@ class RejectionComment(models.Model):
     comment = models.TextField()
 
 
+
+
 class TimePermission(models.Model):
-
-    class Meta:
-        unique_together = ('permission', 'operation')
-
-
-    OPERATION_CHOICES = (
-        ('add', 'Add'),
-        ('delete', 'Delete'),
-    )
-
     permission = models.ForeignKey(Permission, on_delete=models.CASCADE)
-    time = models.DateTimeField()
-    operation = models.CharField(max_length=10, choices=OPERATION_CHOICES, blank=True, null=True)
-    task_id = models.CharField(max_length=255, blank=True, null=True)
+    group = "student"
+    time_add = models.DateTimeField()
+    time_delete = models.DateTimeField()
+    task_id_add = models.CharField(max_length=255, blank=True, null=True)
+    task_id_delete = models.CharField(max_length=255, blank=True, null=True)
 
+    def addTasks(self):
+        self.task_id_add = addPermissionToGroups.apply_async(args=(self.permission.pk, self.group), eta=self.time_add).id
+        self.task_id_delete = deletePermissionFromGroups.apply_async(args=(self.permission.pk, self.group), eta=self.time_delete).id
+
+
+    def deleteTasks(self):
+        try:
+            AsyncResult(self.task_id_add).revoke()
+            AsyncResult(self.task_id_delete).revoke()
+            return f"Task delete"
+        except Exception as e:
+            return f"Error deleteTask: {e}"
+
+   
     def save(self, *args, **kwargs):
-        if self.operation == 'add':
-            task = addPermissionToGroup.delay(self.permission.pk, "student")
-            self.task_id = task.id
-        elif self.operation == 'delete':
-            task = removePermissionFromGroup.delay(self.permission.pk, "student")
-            self.task_id = task.id
+        if self.task_id_add != None or self.task_id_delete != None:
+            self.deleteTasks()
+        
+        self.addTasks()
         return super().save(*args, **kwargs)

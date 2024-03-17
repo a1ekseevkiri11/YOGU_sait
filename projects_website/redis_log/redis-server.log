@@ -1,0 +1,95 @@
+10:C 17 Mar 2024 09:44:08.957 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+10:C 17 Mar 2024 09:44:08.958 * Redis version=7.2.4, bits=64, commit=00000000, modified=0, pid=10, just started
+10:C 17 Mar 2024 09:44:08.959 * Configuration loaded
+10:M 17 Mar 2024 09:44:08.961 * monotonic clock: POSIX clock_gettime
+10:M 17 Mar 2024 09:44:08.962 # Failed to write PID file: No such file or directory
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 7.2.4 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                  
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 10
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           https://redis.io       
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+10:M 17 Mar 2024 09:44:08.964 * Server initialized
+10:M 17 Mar 2024 09:44:08.967 * Creating AOF base file appendonly.aof.1.base.rdb on server start
+10:M 17 Mar 2024 09:44:08.971 * Creating AOF incr file appendonly.aof.1.incr.aof on server start
+10:M 17 Mar 2024 09:44:08.972 * Ready to accept connections tcp
+10:C 17 Mar 2024 09:46:01.074 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+10:C 17 Mar 2024 09:46:01.076 * Redis version=7.2.4, bits=64, commit=00000000, modified=0, pid=10, just started
+10:C 17 Mar 2024 09:46:01.077 * Configuration loaded
+10:M 17 Mar 2024 09:46:01.078 * monotonic clock: POSIX clock_gettime
+10:M 17 Mar 2024 09:46:01.079 # Failed to write PID file: No such file or directory
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 7.2.4 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                  
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 10
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           https://redis.io       
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+10:M 17 Mar 2024 09:46:01.081 * Server initialized
+10:M 17 Mar 2024 09:46:01.082 * Reading RDB base file on AOF loading...
+10:M 17 Mar 2024 09:46:01.083 * Loading RDB produced by version 7.2.4
+10:M 17 Mar 2024 09:46:01.084 * RDB age 113 seconds
+10:M 17 Mar 2024 09:46:01.084 * RDB memory usage when created 0.83 Mb
+10:M 17 Mar 2024 09:46:01.085 * RDB is base AOF
+10:M 17 Mar 2024 09:46:01.086 * Done loading RDB, keys loaded: 0, keys expired: 0.
+10:M 17 Mar 2024 09:46:01.087 * DB loaded from base file appendonly.aof.1.base.rdb: 0.005 seconds
+10:M 17 Mar 2024 09:46:01.087 * DB loaded from append only file: 0.006 seconds
+10:M 17 Mar 2024 09:46:01.088 * Opening AOF incr file appendonly.aof.1.incr.aof on server start
+10:M 17 Mar 2024 09:46:01.089 * Ready to accept connections tcp
+10:C 17 Mar 2024 09:46:51.346 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+10:C 17 Mar 2024 09:46:51.348 * Redis version=7.2.4, bits=64, commit=00000000, modified=0, pid=10, just started
+10:C 17 Mar 2024 09:46:51.349 * Configuration loaded
+10:M 17 Mar 2024 09:46:51.350 * monotonic clock: POSIX clock_gettime
+10:M 17 Mar 2024 09:46:51.352 # Failed to write PID file: No such file or directory
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 7.2.4 (00000000/0) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                  
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 6379
+ |    `-._   `._    /     _.-'    |     PID: 10
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           https://redis.io       
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+10:M 17 Mar 2024 09:46:51.354 * Server initialized
+10:M 17 Mar 2024 09:46:51.354 * Reading RDB base file on AOF loading...
+10:M 17 Mar 2024 09:46:51.355 * Loading RDB produced by version 7.2.4
+10:M 17 Mar 2024 09:46:51.356 * RDB age 163 seconds
+10:M 17 Mar 2024 09:46:51.356 * RDB memory usage when created 0.83 Mb
+10:M 17 Mar 2024 09:46:51.357 * RDB is base AOF
+10:M 17 Mar 2024 09:46:51.358 * Done loading RDB, keys loaded: 0, keys expired: 0.
+10:M 17 Mar 2024 09:46:51.359 * DB loaded from base file appendonly.aof.1.base.rdb: 0.004 seconds
+10:M 17 Mar 2024 09:46:51.359 * DB loaded from append only file: 0.005 seconds
+10:M 17 Mar 2024 09:46:51.360 * Opening AOF incr file appendonly.aof.1.incr.aof on server start
+10:M 17 Mar 2024 09:46:51.361 * Ready to accept connections tcp
