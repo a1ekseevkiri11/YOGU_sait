@@ -1,6 +1,8 @@
 import os
 from celery import Celery
 from . import settings
+from datetime import timedelta
+
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'projects_website.settings')
 
@@ -11,5 +13,9 @@ app.conf.result_backend = settings.CELERY_RESULT_BACKEND
 
 app.autodiscover_tasks()
 
-
-
+app.conf.beat_schedule = {
+    'inspector-time-permission-tasks': {
+        'task': 'showcase_projects.tasks.inspectorTimePermissionTasks',
+        'schedule': timedelta(minutes=1),
+    },
+}

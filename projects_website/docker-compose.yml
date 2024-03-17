@@ -37,6 +37,26 @@ services:
     
     depends_on:
       - db
+
+  beat:
+    build:
+      context: .
+    hostname: beat
+    entrypoint: celery
+    command: -A projects_website.celery_app beat --loglevel=info
+    volumes:
+      - ./services:/services
+    environment:
+      - DB_HOST=db
+      - DB_NAME=pgdb
+      - DB_USER=user
+      - DB_PASSWORD=password
+    links:
+      - redis
+      - db
+    depends_on:
+      - redis
+      - db
   
   worker:
     build:

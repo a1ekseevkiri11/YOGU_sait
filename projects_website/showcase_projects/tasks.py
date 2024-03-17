@@ -2,8 +2,22 @@
 
 from celery import shared_task
 from django.contrib.auth.models import Group, Permission
+from django.utils import timezone
 
 
+@shared_task
+def inspectorTimePermissionTasks():
+    from .models import TimePermission
+    now = timezone.now()
+    scheduled_tasks = TimePermission.objects.all()
+    for task in scheduled_tasks:
+        if task.time_delete <= now:
+            if not task.completed_delete:
+                task.deleteTask()
+        elif task.time_add <= now:
+            if not task.completed_add:
+                task.addTask()
+        
 
 @shared_task(bind=True)
 def addPermissionToGroups(self, permission_id, group_name):

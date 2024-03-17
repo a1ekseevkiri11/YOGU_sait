@@ -1,7 +1,6 @@
 from django.db import models
 from registration.models import Profile
 from django.contrib.auth.models import Group, Permission
-from celery.result import AsyncResult
 
 from .tasks import (
     addPermissionToGroups,
@@ -118,26 +117,19 @@ class TimePermission(models.Model):
     group = "student"
     time_add = models.DateTimeField()
     time_delete = models.DateTimeField()
-    task_id_add = models.CharField(max_length=255, blank=True, null=True)
-    task_id_delete = models.CharField(max_length=255, blank=True, null=True)
+    completed_add = False
+    completed_delete = False
 
-    def addTasks(self):
-        self.task_id_add = addPermissionToGroups.apply_async(args=(self.permission.pk, self.group), eta=self.time_add).id
-        self.task_id_delete = deletePermissionFromGroups.apply_async(args=(self.permission.pk, self.group), eta=self.time_delete).id
+    def addTask(self):
+        self.completed_add = True
+        addPermissionToGroups.delay(self.permission.pk, self.group)
 
 
-    def deleteTasks(self):
-        try:
-            AsyncResult(self.task_id_add).revoke()
-            AsyncResult(self.task_id_delete).revoke()
-            return f"Task delete"
-        except Exception as e:
-            return f"Error deleteTask: {e}"
+    def deleteTask(self):
+        self.completed_delete = True
+        deletePermissionFromGroups.delay(self.permission.pk, self.group)
 
-   
     def save(self, *args, **kwargs):
-        if self.task_id_add != None or self.task_id_delete != None:
-            self.deleteTasks()
-        
-        self.addTasks()
+        completed_add = False
+        completed_delete = False
         return super().save(*args, **kwargs)
